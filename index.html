@@ -212,7 +212,7 @@ section{padding-block:clamp(64px,9vw,112px)}
 .faq details p{padding:0 0 22px;color:var(--ink-2);max-width:68ch}
 
 /* Contact */
-.contact{background:var(--navy);color:var(--on-navy);border-radius:28px;padding:clamp(36px,6vw,72px);display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;position:relative;overflow:hidden}
+.contact{background:var(--navy);color:var(--on-navy);border-radius:28px;padding:clamp(36px,6vw,72px);display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;position:relative;overflow:hidden}
 .contact>*{min-width:0;position:relative}
 .contact::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--cyan) 35%,transparent),transparent 70%)}
 .contact h2{color:var(--on-navy)}
@@ -224,6 +224,19 @@ section{padding-block:clamp(64px,9vw,112px)}
 .mail button{font:600 13px var(--f-body);color:var(--navy);background:var(--on-navy);border:0;border-radius:999px;padding:8px 14px;cursor:pointer;white-space:nowrap}
 .contact .btn{background:var(--cyan);color:#06122b;justify-content:center}
 @media (max-width:820px){.contact{grid-template-columns:1fr}}
+.cform{display:grid;gap:12px}
+.cform .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.cform .row2{grid-template-columns:1fr}}
+.cform label{display:grid;gap:6px;font:600 13px var(--f-body);color:color-mix(in srgb,var(--on-navy) 85%,transparent)}
+.cform input,.cform textarea{font:400 15px var(--f-body);color:var(--on-navy);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:11px 13px;width:100%;box-sizing:border-box;resize:vertical}
+.cform input:focus,.cform textarea:focus{outline:2px solid var(--cyan);outline-offset:1px;border-color:transparent}
+.cform textarea::placeholder{color:color-mix(in srgb,var(--on-navy) 45%,transparent)}
+.cform .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.cform-status{font:600 14px var(--f-body);margin:0}.cform-status:empty{display:none}
+.cform-status.ok{color:var(--cyan)}.cform-status.err{color:#ffb4a8}
+.contact p.cform-legal{font-size:12px;line-height:1.5;margin:0;color:color-mix(in srgb,var(--on-navy) 60%,transparent)}
+.cform .mail{padding:10px 14px;flex-wrap:wrap;gap:8px 12px}.cform .mail code{flex:1 1 auto;overflow-wrap:normal;white-space:nowrap}.cform .mail span{font-size:13px;color:color-mix(in srgb,var(--on-navy) 70%,transparent)}
+
 
 footer{padding-block:48px 56px;color:var(--ink-2);font-size:14px}
 .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
@@ -472,10 +485,21 @@ footer dd{margin:0}
           <h2 style="margin-top:14px">30 minutes pour savoir si un diagnostic vaut le coup chez vous.</h2>
           <p>Nous regardons ensemble votre situation, vos prochaines échéances de contrats, et nous vous donnons le prix du diagnostic à la fin de l'échange.</p>
         </div>
-        <div class="mailbox">
-          <div class="mail"><code id="mail-addr">contact@pilotill.fr</code><button type="button" id="copy-mail">Copier</button></div>
-          <a class="btn" href="mailto:contact@pilotill.fr?subject=Diagnostic%20des%20co%C3%BBts%20IT">Écrire un e-mail <span class="arrow" aria-hidden="true">→</span></a>
-        </div>
+        <form class="cform" id="cform" action="https://formspree.io/f/FORMSPREE_ID" method="POST" novalidate>
+          <div class="row2">
+            <label>Nom<input name="nom" autocomplete="name" required></label>
+            <label>Entreprise<input name="entreprise" autocomplete="organization" required></label>
+          </div>
+          <label>E-mail professionnel<input type="email" name="email" autocomplete="email" required></label>
+          <label>Objet<input name="objet" value="Diagnostic des coûts IT" required></label>
+          <label>Message<textarea name="message" rows="4" required placeholder="Votre contexte en quelques lignes : taille, prochaines échéances de contrats…"></textarea></label>
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+          <input type="hidden" name="_subject" value="Site Pilotill : nouveau message">
+          <button class="btn" type="submit">Envoyer le message <span class="arrow" aria-hidden="true">→</span></button>
+          <p class="cform-status" id="cform-status" role="status" aria-live="polite"></p>
+          <p class="cform-legal">Vos informations servent uniquement à vous répondre et sont conservées au plus 3 ans après notre dernier échange. Le formulaire est opéré par Formspree (États-Unis). Vous pouvez demander leur suppression à contact@pilotill.fr.</p>
+          <div class="mail"><span>Ou directement :</span><code id="mail-addr">contact@pilotill.fr</code><button type="button" id="copy-mail">Copier</button></div>
+        </form>
       </div>
     </div>
   </section>
@@ -496,7 +520,7 @@ footer dd{margin:0}
         <dt>Directeur de la publication</dt><dd>Ludovic Lebel, gérant</dd>
         <dt>Contact</dt><dd>contact@pilotill.fr</dd>
         <dt>Hébergeur</dt><dd>GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis</dd>
-        <dt>Données personnelles</dt><dd>Ce site ne dépose aucun cookie de mesure d'audience et ne collecte aucune donnée par formulaire. Les e-mails reçus servent uniquement à vous répondre. L’hébergeur peut conserver des journaux techniques (adresse IP) pour la sécurité du service.</dd>
+        <dt>Données personnelles</dt><dd>Ce site ne dépose aucun cookie de mesure d'audience. Les données saisies dans le formulaire de contact (nom, entreprise, e-mail, message) et les e-mails reçus servent uniquement à vous répondre, sur la base de votre demande. Elles sont conservées au plus 3 ans après le dernier échange. Le formulaire est opéré par Formspree, Inc. (États-Unis). Vous pouvez exercer vos droits d'accès, de rectification et de suppression à contact@pilotill.fr, et saisir la CNIL en cas de difficulté. L’hébergeur peut conserver des journaux techniques (adresse IP) pour la sécurité du service.</dd>
       </dl>
     </details>
   </div>
@@ -513,6 +537,16 @@ footer dd{margin:0}
     function done(){b.textContent='Copié';setTimeout(function(){b.textContent='Copier'},1800)}
     function sel(){var r=document.createRange();r.selectNodeContents(a);var s=window.getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Sélectionné'}
     try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+  });
+  var f=document.getElementById('cform'),st=document.getElementById('cform-status');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){st.className='cform-status err';st.textContent='Merci de remplir tous les champs, avec un e-mail valide.';return}
+    var btn=f.querySelector('button[type=submit]');btn.disabled=true;st.className='cform-status';st.textContent='Envoi en cours…';
+    fetch(f.action,{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}}).then(function(r){
+      if(r.ok){f.reset();st.className='cform-status ok';st.textContent='Merci, votre message est bien parti. Réponse sous 48 h ouvrées.'}
+      else{throw new Error()}
+    }).catch(function(){st.className='cform-status err';st.textContent='L’envoi a échoué. Écrivez-nous directement à contact@pilotill.fr.'}).finally(function(){btn.disabled=false});
   });
 })();
 </script>
